@@ -1,9 +1,30 @@
-define(['bunit', 'assert', 'must-throw', 'src/datafmt', 'src/model'], function (bunit, assert, mustThrow, datafmt, model) {
+define([
+    'bunit',
+    'assert',
+    'must-throw',
+    'src/datafmt',
+    'src/model'
+], function (
+    bunit,
+    assert,
+    mustThrow,
+    datafmt,
+    model
+) {
     var parse = datafmt.parse,
         serialize = datafmt.serialize;
 
+    function findById(arr, id) {
+        for (var i = 0; i < arr.length; i++) {
+            if (arr[i].id == id) {
+                return arr[i];
+            }
+        }
+    }
+
     var d_empty = {
         version: 1,
+        main: "main",
         diagrams: [
             {
                 name: "main",
@@ -15,36 +36,37 @@ define(['bunit', 'assert', 'must-throw', 'src/datafmt', 'src/model'], function (
 
     var d_simple = {
         version: 1,
+        main: "main",
         diagrams: [
             {
                 name: "main",
                 elements: [
-                    {id: 0, type: "enter"},
-                    {id: 1, type: "call", machine: "r", times: 5},
-                    {id: 2, type: "call", machine: "'x'"},
-                    {id: 3, type: "call", machine: "trivial"},
-                    {id: 4, type: "exit"},
+                    {id: 1, type: "enter"},
+                    {id: 2, type: "call", machine: "r", times: 5},
+                    {id: 3, type: "call", machine: "'x'"},
+                    {id: 4, type: "call", machine: "trivial"},
+                    {id: 5, type: "exit"},
                 ],
                 links: [
-                    {id: 0, conditions: null, src_el_id: 0, dst_el_id: 1},
                     {id: 1, conditions: null, src_el_id: 1, dst_el_id: 2},
                     {id: 2, conditions: null, src_el_id: 2, dst_el_id: 3},
                     {id: 3, conditions: null, src_el_id: 3, dst_el_id: 4},
+                    {id: 4, conditions: null, src_el_id: 4, dst_el_id: 5},
                 ],
             },
             {
                 name: "trivial",
                 elements: [
-                    {id: 0, type: "enter"},
-                    {id: 1, type: "call", machine: "main"},
-                    {id: 2, type: "exit"},
-                    {id: 3, type: "call", machine: "trivial"},
+                    {id: 1, type: "enter"},
+                    {id: 2, type: "call", machine: "main"},
+                    {id: 3, type: "exit"},
+                    {id: 4, type: "call", machine: "trivial"},
                 ],
                 links: [
-                    {id: 0, conditions: "1",  src_el_id: 0, dst_el_id: 1},
-                    {id: 2, conditions: "0",  src_el_id: 0, dst_el_id: 2},
-                    {id: 1, conditions: null, src_el_id: 1, dst_el_id: 3},
-                    {id: 3, conditions: null, src_el_id: 3, dst_el_id: 2},
+                    {id: 1, conditions: "1",  src_el_id: 1, dst_el_id: 2},
+                    {id: 3, conditions: "0",  src_el_id: 1, dst_el_id: 3},
+                    {id: 2, conditions: null, src_el_id: 2, dst_el_id: 4},
+                    {id: 4, conditions: null, src_el_id: 4, dst_el_id: 3},
                 ],
             },
         ],
@@ -52,122 +74,111 @@ define(['bunit', 'assert', 'must-throw', 'src/datafmt', 'src/model'], function (
 
 
 
-    bunit("datafmt-v1:parse. Парсер парсит правильные типы данных", {
+    bunit("datafmt-v1:parse", {
         setUp: function() {
             return [parse(d_simple)];
         },
-        diagramsAreObject: function(parsed) {
+        "Parsed DiagramSet's diagrams field is object": function(parsed) {
             assert(parsed.diagrams).is('object');
             assert(parsed.diagrams).not().equals(null);
         },
-        diagramHasRightType: function(parsed) {
+        "Parsed Diagram has right class": function(parsed) {
             var d = parsed.diagrams["main"];
             assert(d).isDefined();
             assert(d.constructor).equals(model.Diagram);
         },
-        elementsAreArray: function(parsed) {
+        "Parsed Diagram's elements field is array": function(parsed) {
             var d = parsed.diagrams["main"];
             assert(d.elements).is('array');
             assert(d.elements).not().equals(null);
         },
-        linksAreArray: function(parsed) {
+        "Parsed Diagram's links field is array": function(parsed) {
             var d = parsed.diagrams["main"];
             assert(d.links).is('array');
             assert(d.links).not().equals(null);
         },
-        linkHasRightType: function(parsed) {
+        "Parsed Link has right type": function(parsed) {
             var d = parsed.diagrams["main"];
             assert(d.links[0].constructor).equals(model.Link);
         },
-        enterHasRightType: function(parsed) {
+        "Parsed Element has integer id": function(parsed) {
             var d = parsed.diagrams["main"];
-            assert(d.elements[0].constructor).equals(model.EnterElement);
+            d.elements.forEach(function(el) {
+                assert(typeof el.id == 'number').equals(true);
+            });
         },
-        callHasRightType: function(parsed) {
+        "Parsed Link has integer id": function(parsed) {
             var d = parsed.diagrams["main"];
-            assert(d.elements[1].constructor).equals(model.CallElement);
+            d.links.forEach(function(l) {
+                assert(typeof l.id == 'number').equals(true);
+            });
         },
-        exitHasRightType: function(parsed) {
+        "Parsed EnterElement has right type": function(parsed) {
             var d = parsed.diagrams["main"];
-            assert(d.elements[4].constructor).equals(model.ExitElement);
+            assert(findById(d.elements, 1).constructor).equals(model.EnterElement);
         },
-        callHasTimes: function(parsed) {
+        "Parsed CallElement has right type": function(parsed) {
             var d = parsed.diagrams["main"];
-            assert(d.elements[1].times).equals(5);
+            assert(findById(d.elements, 2).constructor).equals(model.CallElement);
         },
-        defaultTimesIs1: function(parsed) {
+        "Parsed ExitElement has right type": function(parsed) {
             var d = parsed.diagrams["main"];
-            assert(d.elements[2].times).equals(1);
+            assert(findById(d.elements, 5).constructor).equals(model.ExitElement);
         },
-        callMachineParsed: function(parsed) {
+        "Parsed CallElement has times field": function(parsed) {
             var d = parsed.diagrams["main"];
-            assert(d.elements[1].machine).equals("r");
+            assert(findById(d.elements, 2).times).equals(5);
         },
-    });
-
-    bunit("datafmt-v1:parse. Прописываются id и name", {
-        setUp: function () {
-            return [parse(d_simple)];
+        "Parsed CallElement's times field's value is 1": function(parsed) {
+            var d = parsed.diagrams["main"];
+            assert(findById(d.elements, 3).times).equals(1);
         },
-        diagramHasName: function(parsed) {
+        "Parsed CallElement's machine field is correct": function(parsed) {
+            var d = parsed.diagrams["main"];
+            assert(findById(d.elements, 2).machine).equals("r");
+        },
+        "Parsed DiagramSet has main diagram set": function(parsed) {
+            assert(parsed.main).equals(parsed.diagrams["main"]);
+        },
+        "Parsed Diagram has name": function(parsed) {
             var d = parsed.diagrams["main"];
             assert(d.name).equals("main");
         },
-        elementHasIntegerId: function(parsed) {
+        "Parsed Link's src field is Element": function(parsed) {
             var d = parsed.diagrams["main"];
-            // Тут внимательно, "0" как строка не подойдёт:
-            // после парсинга поле id должно быть целым числом
-            assert(d.elements[0].id).equals(0);
-            assert(d.elements[1].id).equals(1);
-            assert(d.elements[2].id).equals(2);
-            assert(d.elements[3].id).equals(3);
-            assert(d.elements[4].id).equals(4);
+
+            var link = findById(d.links, 1);
+            var el = findById(d.elements, 1);
+            assert(link.src_el_id).not().isDefined();
+            assert(link.src).is("object");
+            assert(link.src).equals(el);
         },
-        linkHasIntegerId: function(parsed) {
+        "Parsed Link's dst field is Element": function(parsed) {
             var d = parsed.diagrams["main"];
-            // Тут внимательно, "0" как строка не подойдёт:
-            // после парсинга поле id должно быть целым числом
-            assert(d.links[0].id).equals(0);
-            assert(d.links[1].id).equals(1);
-            assert(d.links[2].id).equals(2);
-            assert(d.links[3].id).equals(3);
+
+            var link = findById(d.links, 1);
+            var el = findById(d.elements, 2);
+            assert(link.dst_el_id).not().isDefined();
+            assert(link.dst).is("object");
+            assert(link.dst).equals(el);
+        },
+        "Parsed Elements's ins field is array": function(parsed) {
+            var d = parsed.diagrams["main"];
+
+            var el = findById(d.elements, 2);
+            assert(el.ins).is("array");
+            assert(el.ins[0]).isDefined();
+        },
+        "Parsed Elements's outs field is array": function(parsed) {
+            var d = parsed.diagrams["main"];
+
+            var el = findById(d.elements, 1);
+            assert(el.outs).is("array");
+            assert(el.outs[0]).isDefined();
         },
     });
 
-    bunit("datafmt-v1:parse. Проставляются ссылки на элементы и линки", {
-        setUp: function () {
-            return [parse(d_simple)];
-        },
-        linkSrcElementIdChangedToLinks: function(parsed) {
-            var d = parsed.diagrams["main"];
-
-            assert(d.links[0].src_el_id).not().isDefined();
-            assert(d.links[0].src).is("object");
-            assert(d.links[0].src).equals(d.elements[0]);
-        },
-        linkDstElementIdChangedToLinks: function(parsed) {
-            var d = parsed.diagrams["main"];
-
-            assert(d.links[0].dst_el_id).not().isDefined();
-            assert(d.links[0].dst).is("object");
-            assert(d.links[0].dst).equals(d.elements[1]);
-        },
-        elementHasInsLinkList: function(parsed) {
-            var d = parsed.diagrams["main"];
-
-            assert(d.elements[1].ins).is("array");
-            assert(d.elements[1].ins[0]).isDefined();
-        },
-        elementHasOutsLinkList: function(parsed) {
-            var d = parsed.diagrams["main"];
-
-            assert(d.elements[0].outs).is("array");
-            assert(d.elements[0].outs[0]).isDefined();
-        },
-    });
-    
-
-    bunit("datafmt-v1:serialize. Формируется правильный объект", {
+    bunit("datafmt-v1:serialize", {
         setUp: function () {
             var parsed_d_simple = parse(d_simple);
             var serialized = serialize(parsed_d_simple);
@@ -185,28 +196,28 @@ define(['bunit', 'assert', 'must-throw', 'src/datafmt', 'src/model'], function (
                 }, {});
             return [serialized, main_elements_by_id, main_links_by_id];
         },
-        versionAdded: function(obj, elements, links) {
+        "Version added to serialized DiagramSet": function(obj, elements, links) {
             assert(obj.version).isDefined();
         },
-        diagramHasRightType: function(obj, elements, links) {
+        "Serialized Diagram is POJSO": function(obj, elements, links) {
             var d = obj.diagrams["main"];
             assert(d).isDefined();
-            assert(d.constructor).not().equals(model.Diagram);
+            assert(d.constructor).equals(Object);
         },
-        linkHasRightType: function(obj, elements, links) {
+        "Serialized Link is POJSO": function(obj, elements, links) {
             assert(links[0]).isDefined();
             assert(links[0].constructor).equals(Object);
         },
-        enterHasRightType: function(obj, elements, links) {
+        "Serialized StartElement is POJSO": function(obj, elements, links) {
             assert(elements[0]).isDefined();
             assert(elements[0].constructor).equals(Object);
         },
-        exitHasRightType: function(obj, elements, links) {
+        "Serialized ExitElement is POJSO": function(obj, elements, links) {
             var d = obj.diagrams["main"];
             assert(elements[4]).isDefined();
             assert(elements[4].constructor).equals(Object);
         },
-        callHasRightType: function(obj, elements, links) {
+        "Serialized CallElement is POJSO": function(obj, elements, links) {
             var d = obj.diagrams["main"];
             assert(elements[1]).isDefined();
             assert(elements[1].constructor).equals(Object);

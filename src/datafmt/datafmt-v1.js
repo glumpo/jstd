@@ -13,11 +13,10 @@ define(['../model'], function(model) {
             this.diagramSet = new model.DiagramSet();
             obj.diagrams.forEach(function(dObj) {
                 var d = this.parseDiagram(dObj);
-                if (this.diagramSet.diagrams[d.name]) {
-                    throw new Error("Duplicate diagram name: '" + d.name + "'");
-                }
-                this.diagramSet.diagrams[d.name] = d;
+                this.diagramSet.addDiagram(d, d.name);
             }, this);
+            this.diagramSet.setMainDiagram(
+                this.diagramSet.diagrams[obj.main]);
             return this.diagramSet;
         }
     
