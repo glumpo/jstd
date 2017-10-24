@@ -57,8 +57,18 @@ define(['../model'], function(model) {
                 case "exit":
                     el = new model.ExitElement();
                     break;
-                case "call":
-                    el = new model.CallElement();
+                case "user":
+                	el = new model.UserMachine();
+                    el.machine = elObj.machine;
+                    el.times = elObj.times == null ? 1 : elObj.times;
+                    break;
+                case "letter":
+                	el = new model.LetterMachine();
+                    el.machine = elObj.machine;
+                    el.times = elObj.times == null ? 1 : elObj.times;
+                    break;
+                case "standard":
+                    el = new model.StandardMachine();
                     el.machine = elObj.machine;
                     el.times = elObj.times == null ? 1 : elObj.times;
                     break;
