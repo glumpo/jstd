@@ -43,7 +43,7 @@ define([
                 elements: [
                     {id: 1, type: "enter"},
                     {id: 2, type: "standard", machine: "r", times: 5},
-                    {id: 3, type: "letter", machine: "x"},
+                    {id: 3, type: "letter", letter: "x"},
                     {id: 4, type: "user", machine: "trivial"},
                     {id: 5, type: "exit"},
                 ],
@@ -133,24 +133,18 @@ define([
             var d = parsed.diagrams["main"];
             assert(findById(d.elements, 3).constructor).equals(model.LetterMachine);
         },
-        "Parsed LetterMachine has right field machine": function(parsed) {
+        "Parsed LetterMachine has right field letter": function(parsed) {
             var d = parsed.diagrams["main"];
-            assert(findById(d.elements, 3).machine).equals("x");
+            assert(findById(d.elements, 3).getLetter()).equals("x");
         },
-//        "LetterMachine.alphabet has letter": function(parsed) {
-//            var d = parsed.diagrams["main"];
-//            let set_example = new Set();
-//            let machine_name = findById(d.elements, 3).machine;
-//            set_example.add(machine_name);
-//            assert(model.LetterMachine.alphabet.has(machine_name)).equals(true);
-//        },
+        "LetterMachine.alphabet has letter": function(parsed) {
+            var d = parsed.diagrams["main"];
+            let letter = findById(d.elements, 3).getLetter();
+            assert(model.LetterMachine.alphabet.has(letter)).equals(true);
+        },
         "Parsed UserMachine has right type": function(parsed) {
             var d = parsed.diagrams["main"];
             assert(findById(d.elements, 4).constructor).equals(model.UserMachine);
-        },
-        "Parsed LetterMachine's times field's value is 1": function(parsed) {
-            var d = parsed.diagrams["main"];
-            assert(findById(d.elements, 3).times).equals(1);
         },
         "Parsed StandardMachine's machine field is correct": function(parsed) {
             var d = parsed.diagrams["main"];

@@ -63,9 +63,7 @@ define(['../model'], function(model) {
                     el.times = elObj.times == null ? 1 : elObj.times;
                     break;
                 case "letter":
-                	el = new model.LetterMachine();
-                    el.machine = elObj.machine;
-                    el.times = elObj.times == null ? 1 : elObj.times;
+                	el = new model.LetterMachine(elObj.letter);
                     break;
                 case "standard":
                     el = new model.StandardMachine();
