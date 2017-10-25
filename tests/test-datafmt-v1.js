@@ -135,12 +135,11 @@ define([
         },
         "Parsed LetterMachine has right field letter": function(parsed) {
             var d = parsed.diagrams["main"];
-            assert(findById(d.elements, 3).getLetter()).equals("x");
+            assert(findById(d.elements, 3).letter).equals("x");
         },
-        "LetterMachine.alphabet has letter": function(parsed) {
+        "Parsed LetterMachine has NOT times field": function(parsed) {
             var d = parsed.diagrams["main"];
-            let letter = findById(d.elements, 3).getLetter();
-            assert(model.LetterMachine.alphabet.has(letter)).equals(true);
+            assert(findById(d.elements, 3).times).equals(undefined);
         },
         "Parsed UserMachine has right type": function(parsed) {
             var d = parsed.diagrams["main"];
