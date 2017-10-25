@@ -42,9 +42,9 @@ define([
                 name: "main",
                 elements: [
                     {id: 1, type: "enter"},
-                    {id: 2, type: "call", machine: "r", times: 5},
-                    {id: 3, type: "call", machine: "'x'"},
-                    {id: 4, type: "call", machine: "trivial"},
+                    {id: 2, type: "standard", machine: "r", times: 5},
+                    {id: 3, type: "letter", letter: "x"},
+                    {id: 4, type: "user", machine: "trivial"},
                     {id: 5, type: "exit"},
                 ],
                 links: [
@@ -58,9 +58,9 @@ define([
                 name: "trivial",
                 elements: [
                     {id: 1, type: "enter"},
-                    {id: 2, type: "call", machine: "main"},
+                    {id: 2, type: "user", machine: "main"},
                     {id: 3, type: "exit"},
-                    {id: 4, type: "call", machine: "trivial"},
+                    {id: 4, type: "user", machine: "trivial"},
                 ],
                 links: [
                     {id: 1, conditions: "1",  src_el_id: 1, dst_el_id: 2},
@@ -117,23 +117,35 @@ define([
             var d = parsed.diagrams["main"];
             assert(findById(d.elements, 1).constructor).equals(model.EnterElement);
         },
-        "Parsed CallElement has right type": function(parsed) {
+        "Parsed StandardMachine has right type": function(parsed) {
             var d = parsed.diagrams["main"];
-            assert(findById(d.elements, 2).constructor).equals(model.CallElement);
+            assert(findById(d.elements, 2).constructor).equals(model.StandardMachine);
         },
         "Parsed ExitElement has right type": function(parsed) {
             var d = parsed.diagrams["main"];
             assert(findById(d.elements, 5).constructor).equals(model.ExitElement);
         },
-        "Parsed CallElement has times field": function(parsed) {
+        "Parsed StandardMachine has times field": function(parsed) {
             var d = parsed.diagrams["main"];
             assert(findById(d.elements, 2).times).equals(5);
         },
-        "Parsed CallElement's times field's value is 1": function(parsed) {
+        "Parsed LetterMachine has right type": function(parsed) {
             var d = parsed.diagrams["main"];
-            assert(findById(d.elements, 3).times).equals(1);
+            assert(findById(d.elements, 3).constructor).equals(model.LetterMachine);
         },
-        "Parsed CallElement's machine field is correct": function(parsed) {
+        "Parsed LetterMachine has right field letter": function(parsed) {
+            var d = parsed.diagrams["main"];
+            assert(findById(d.elements, 3).letter).equals("x");
+        },
+        "Parsed LetterMachine has NOT times field": function(parsed) {
+            var d = parsed.diagrams["main"];
+            assert(findById(d.elements, 3).times).equals(undefined);
+        },
+        "Parsed UserMachine has right type": function(parsed) {
+            var d = parsed.diagrams["main"];
+            assert(findById(d.elements, 4).constructor).equals(model.UserMachine);
+        },
+        "Parsed StandardMachine's machine field is correct": function(parsed) {
             var d = parsed.diagrams["main"];
             assert(findById(d.elements, 2).machine).equals("r");
         },
@@ -176,6 +188,7 @@ define([
             assert(el.outs).is("array");
             assert(el.outs[0]).isDefined();
         },
+        
     });
 
     bunit("datafmt-v1:serialize", {

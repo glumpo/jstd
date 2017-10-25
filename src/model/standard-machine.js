@@ -1,10 +1,10 @@
 define(['./element'], function(Element) {
     "use strict";
 
-    class CallElement extends Element {
+    class StandardMachine extends Element{
         constructor(machine, times) {
-            super();
-            /** Machine name. Like "l", "R","'0'" or user diagram name */
+        	super();
+        	/** Machine name. Like "l", "R"*/
             this.machine = machine || "";
             /** How many times to execute the machine (>=1) */
             this.times = times == null ? 1 : times;
@@ -15,5 +15,5 @@ define(['./element'], function(Element) {
         }
     };
 
-    return CallElement;
+    return StandardMachine;
 });

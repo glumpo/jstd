@@ -7,12 +7,12 @@ define(['src/model'], function(model) {
         ds.addDiagram(main, "main");
         var e1, e2, e3, e4, e5, e6, e7, e8;
         e1 = new model.EnterElement();
-        e2 = new model.CallElement("l");
-        e3 = new model.CallElement("'0'");
-        e4 = new model.CallElement("'1'");
-        e5 = new model.CallElement("R", 2);
-        e6 = new model.CallElement("'+'");
-        e7 = new model.CallElement("r");
+        e2 = new model.StandardMachine("l");
+        e3 = new model.LetterMachine("0");
+        e4 = new model.LetterMachine("1");
+        e5 = new model.StandardMachine("R", 2);
+        e6 = new model.LetterMachine("+");
+        e7 = new model.StandardMachine("r");
         e8 = new model.ExitElement();
         main.addElement(e1);
         main.addElement(e2);
