@@ -85,7 +85,7 @@ define([
                     assert(oldi).equals(0);
                 },
             });
-            t.setActiveCellIndex(10);
+            tape.setActiveCellIndex(10);
             assert(notified).equals(true);
         },
         "SetActiveCellValue notifies listeners": function() {
@@ -100,7 +100,7 @@ define([
                     assert(oldv).equals(" ");
                 },
             });
-            t.setActiveCellValue("x");
+            tape.setActiveCellValue("x");
             assert(notified).equals(true);
         },
         "Listener added while notifying ARE NOT notified": function() {
