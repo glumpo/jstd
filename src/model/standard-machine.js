@@ -3,8 +3,8 @@ define(['./element'], function(Element) {
 
     class StandardMachine extends Element{
         constructor(machine, times) {
-        	super();
-        	/** Machine name. Like "l", "R"*/
+            super();
+            /** Machine name. Like "l", "R"*/
             this.machine = machine || "";
             /** How many times to execute the machine (>=1) */
             this.times = times == null ? 1 : times;

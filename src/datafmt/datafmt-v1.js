@@ -58,12 +58,12 @@ define(['../model'], function(model) {
                     el = new model.ExitElement();
                     break;
                 case "user":
-                	el = new model.UserMachine();
+                    el = new model.UserMachine();
                     el.machine = elObj.machine;
                     el.times = elObj.times == null ? 1 : elObj.times;
                     break;
                 case "letter":
-                	el = new model.LetterMachine(elObj.letter);
+                    el = new model.LetterMachine(elObj.letter);
                     break;
                 case "standard":
                     el = new model.StandardMachine();
