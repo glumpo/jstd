@@ -30,14 +30,35 @@ define([], function() {
      * @constructor
      */
     class Execution {
-        
         /**
          * @param {DiagramSet} dSet - All project to navigate
          * @param {Diagram} dMain - The main diagram to start with
          * @param {Tape} tape
          */
         constructor(dSet, dMain, tape) {
+            this.tape = tape;
+            this.dSet = dSet;
+            this.dMain = dMain;
             
+            this.callStack = [];
+            // TODO: add EnterElement to stack
+            
+            this.statesEnum = {
+                    running = {},
+                    crashed = {},
+                    notstarted = {},
+                    terminated = {},
+                    completed = {}
+            };
+            Object.freeze(this.statesEnum);
+            this.state = this.statesEnum[notstarted];
+            
+            /**
+             * Returns one of statesEnum members
+             */
+            this.getState = function () {
+                return state;
+            }
         }
         
         /**
