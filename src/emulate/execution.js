@@ -1,4 +1,14 @@
-define([], function() {
+define(['../model'], function(
+        DiagramSet,
+        Diagram,
+        Link,
+        Element,
+        EnterElement,
+        ExitElement,
+        StandardMachine,
+        UserMachine,
+        LetterMachine 
+        ) {
 
     
     /**
@@ -41,17 +51,17 @@ define([], function() {
             this.dMain = dMain;
             
             this.callStack = [];
-            // TODO: add EnterElement to stack
+            this.callStack.push(dMain.getEnterElement());
             
             this.statesEnum = {
-                    running = {},
-                    crashed = {},
-                    notstarted = {},
-                    terminated = {},
-                    completed = {}
+                    running : "runing",
+                    crashed : "crashed",
+                    notstarted : "notstarted",
+                    terminated : "terminated",
+                    completed : "completed"
             };
             Object.freeze(this.statesEnum);
-            this.state = this.statesEnum[notstarted];
+            this.state = this.statesEnum[this.statesEnum.notstarted];
             
             /**
              * Returns one of statesEnum members

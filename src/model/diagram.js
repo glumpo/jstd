@@ -1,4 +1,4 @@
-define([], function() {
+define(['./enter-element'], function(EnterElement) {
     "use strict";
 
     class Diagram {
@@ -99,6 +99,16 @@ define([], function() {
             this.listeners.forEach(function(l) {
                 l.onLinkRemoved(this, link);
             }, this);
+        }
+        
+        getEnterElement() {
+            let el;
+            for (el in this.elements) {
+                if (el instanceof EnterElement) {
+                    return el;
+                }
+            }
+            return false;
         }
     };
 

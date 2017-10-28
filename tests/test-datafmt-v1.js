@@ -156,6 +156,10 @@ define([
             var d = parsed.diagrams["main"];
             assert(d.name).equals("main");
         },
+        "Diagrams method getEnterElement works": function(parsed) {
+            var d = parsed.diagrams["main"];
+            assert(findById(d.elements, 1)).equals(d.getEnterElement());
+        },
         "Parsed Link's src field is Element": function(parsed) {
             var d = parsed.diagrams["main"];
 
