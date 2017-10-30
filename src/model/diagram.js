@@ -101,14 +101,15 @@ define(['./enter-element'], function(EnterElement) {
             }, this);
         }
         
+        /**
+         *  Returns ARRAY of all EnterElements 
+         *  or null if no enterElements is found.
+         */
         getEnterElement() {
-            let el;
-            for (el in this.elements) {
-                if (el instanceof EnterElement) {
-                    return el;
-                }
-            }
-            return false;
+            var elArray = this.elements.filter(
+                    function(e) { return e instanceof EnterElement }
+                    );
+            return (elArray.length > 0) ? elArray : null;
         }
     };
 

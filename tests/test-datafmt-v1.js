@@ -158,7 +158,9 @@ define([
         },
         "Diagrams method getEnterElement works": function(parsed) {
             var d = parsed.diagrams["main"];
-            assert(findById(d.elements, 1)).equals(d.getEnterElement());
+            // Note the [0] on the end. IT`S IMPORTANT!!!
+            // Look in getEnterElement JsDoc.
+            assert(findById(d.elements, 1)).equals(d.getEnterElement()[0]);
         },
         "Parsed Link's src field is Element": function(parsed) {
             var d = parsed.diagrams["main"];

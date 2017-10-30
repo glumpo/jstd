@@ -53,14 +53,14 @@ define(['../model'], function(
             this.callStack = [];
             this.callStack.push(dMain.getEnterElement());
             
-            this.statesEnum = {
+            Execution.statesEnum = {
                     running : "runing",
                     crashed : "crashed",
                     notstarted : "notstarted",
                     terminated : "terminated",
                     completed : "completed"
             };
-            Object.freeze(this.statesEnum);
+            Object.freeze(Execution.statesEnum);
             this.state = this.statesEnum[this.statesEnum.notstarted];
             
             /**
