@@ -3,12 +3,15 @@ define(['../model'], function(model) {
     
     /**
      * push it in callStack
+     * 
      * @construtor
      */
     class stackEl {
         /**
-         * @param {Diagram} diagram - Diagram to push
-         * @param {integer} iters - Number of iterations
+         * @param {Diagram}
+         *            diagram - Diagram to push
+         * @param {integer}
+         *            iters - Number of iterations
          * @throws
          */
         constructor(diagram, iters) {
@@ -25,15 +28,19 @@ define(['../model'], function(model) {
     
     
     /**
-     * The main guy, who works with user data.
-     * Just call doStep (throws) and check state thorow getState.
+     * The main guy, who works with user data. Just call doStep (throws) and
+     * check state thorow getState.
+     * 
      * @constructor
      */
     class Execution {
         /**
-         * @param {DiagramSet} dSet - All project to navigate
-         * @param {Diagram} dMain - The main diagram to start with
-         * @param {Tape} tape
+         * @param {DiagramSet}
+         *            dSet - All project to navigate
+         * @param {Diagram}
+         *            dMain - The main diagram to start with
+         * @param {Tape}
+         *            tape
          */
         constructor(dSet, dMain, tape) {
             this.tape = tape;
@@ -42,20 +49,11 @@ define(['../model'], function(model) {
             
             this.callStack = [];
             this.callStack.push(dMain.getEnterElement());
-            if (!Execution.statesEnum) {
-                Execution.statesEnum = {
-                        running : "runing",
-                        crashed : "crashed",
-                        notstarted : "notstarted",
-                        terminated : "terminated",
-                        completed : "completed"
-                };
-                Object.freeze(Execution.statesEnum);
-            }
-            this.state = this.statesEnum[this.statesEnum.notstarted];
+            
+            this.state = this.StatesEnum[this.StatesEnum.notstarted];
             
             /**
-             * Returns one of statesEnum members
+             * Returns one of StatesEnum members
              */
             this.getState = function () {
                 return state;
@@ -64,6 +62,7 @@ define(['../model'], function(model) {
         
         /**
          * Returns next element, those will be used next iteration
+         * 
          * @throws
          */
         predictNextElement() {
@@ -72,13 +71,23 @@ define(['../model'], function(model) {
         
         /**
          * Will execute diagram.
+         * 
          * @throws
          */
         doStep() {
-            //TODO: impliment;
+            // TODO: impliment;
         }
         
     }
+    
+    Execution.StatesEnum = {
+            running : "runing",
+            crashed : "crashed",
+            notstarted : "notstarted",
+            terminated : "terminated",
+            completed : "completed"
+    };
+    Object.freeze(Execution.StatesEnum);
     
     return Execution;
 
