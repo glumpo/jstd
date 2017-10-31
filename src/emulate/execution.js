@@ -1,14 +1,4 @@
-define(['../model'], function(
-        DiagramSet,
-        Diagram,
-        Link,
-        Element,
-        EnterElement,
-        ExitElement,
-        StandardMachine,
-        UserMachine,
-        LetterMachine 
-        ) {
+define(['../model'], function(model) {
 
     
     /**
@@ -52,15 +42,16 @@ define(['../model'], function(
             
             this.callStack = [];
             this.callStack.push(dMain.getEnterElement());
-            
-            Execution.statesEnum = {
-                    running : "runing",
-                    crashed : "crashed",
-                    notstarted : "notstarted",
-                    terminated : "terminated",
-                    completed : "completed"
-            };
-            Object.freeze(Execution.statesEnum);
+            if (!Execution.statesEnum) {
+                Execution.statesEnum = {
+                        running : "runing",
+                        crashed : "crashed",
+                        notstarted : "notstarted",
+                        terminated : "terminated",
+                        completed : "completed"
+                };
+                Object.freeze(Execution.statesEnum);
+            }
             this.state = this.statesEnum[this.statesEnum.notstarted];
             
             /**
