@@ -103,13 +103,13 @@ define(['./enter-element'], function(EnterElement) {
         
         /**
          *  Returns ARRAY of all EnterElements 
-         *  or null if no enterElements is found.
+         *  or empty array if no enterElements is found.
          */
-        getEnterElement() {
+        getEnterElements() {
             var elArray = this.elements.filter(
                     function(e) { return e instanceof EnterElement }
                     );
-            return (elArray.length > 0) ? elArray : null;
+            return elArray;
         }
     };
 

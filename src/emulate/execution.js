@@ -1,26 +1,64 @@
 define(['../model'], function(model) {
 
     
+    class StackForElements {
+        construtor() {
+            this.data = [];
+        }
+        
+        /**
+         * There are some checks. They are useless.
+         * But let them be.
+         * @throws
+         */
+        push(el, iters) {
+            if (!el)
+                throw new Error("What should I push, u, idiot?");
+            
+            iters = iters || 1;
+            if (iters < 1) 
+                throw new Error("Too few iterations (less then 1)");
+            
+            this.data.push(new StackEl(el, iters));
+        }
+        /**
+         * Pops and retunrs StackEl
+         */
+        pop() {
+            return data.pop();
+        }
+        
+        /**
+         * Returns StackEl without poping
+         */
+        get() {
+            return data[this.data.length - 1];
+        }
+        
+        isEmpty() {
+            return data.length === 0;
+        }
+    }
+    
+    
+    
     /**
-     * push it in callStack
+     * Element and number of iterations
      * 
      * @construtor
      */
-    class stackEl {
+    class StackEl {
         /**
-         * @param {Diagram}
-         *            diagram - Diagram to push
-         * @param {integer}
-         *            iters - Number of iterations
-         * @throws
+         * @param {Element} el
+         * @param {Integer} iters
          */
-        constructor(diagram, iters) {
+        constructor(el, iters) {
             if (!Number.isInteger(iters))
-                throw new Error("Not integer.")
+                throw new Error("Number of iterations not integer.")
             if (iters < 1)
                 throw new Error("Too few iterations");
             
-            this.diagram = diagram;
+            this.el = el;
             this.iters = iters;
         }
         
@@ -47,16 +85,20 @@ define(['../model'], function(model) {
             this.dSet = dSet;
             this.dMain = dMain;
             
-            this.callStack = [];
-            this.callStack.push(dMain.getEnterElement());
+            let enterEls = getEnterElements();
+            if (enterEls.length !== 1)
+                throw new Error("getEnterElements length " + enterEls.length);
             
-            this.state = this.StatesEnum[this.StatesEnum.notstarted];
+            this.callStack = new StackForElements();
+            this.callStack.push(enterEls[0]);
+            
+            this.state = Execution.StatesEnum[Execution.StatesEnum.notstarted];
             
             /**
              * Returns one of StatesEnum members
              */
             this.getState = function () {
-                return state;
+                return this.state;
             }
         }
         
@@ -75,7 +117,7 @@ define(['../model'], function(model) {
          * @throws
          */
         doStep() {
-            // TODO: impliment;
+            //TODO: impliment;
         }
         
     }
