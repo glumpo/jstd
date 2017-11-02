@@ -2,7 +2,7 @@ define(['../model'], function(model) {
 
     
     class StackForElements {
-        construtor() {
+        constructor() {
             this.data = [];
         }
         
@@ -16,6 +16,8 @@ define(['../model'], function(model) {
                 throw new Error("What should I push, u, idiot?");
             
             iters = iters || 1;
+            if (!Number.isInteger(iters))
+                throw new Error("Iters is not integer");
             if (iters < 1) 
                 throw new Error("Too few iterations (less then 1)");
             
@@ -25,18 +27,18 @@ define(['../model'], function(model) {
          * Pops and retunrs StackEl
          */
         pop() {
-            return data.pop();
+            return this.data.pop();
         }
         
         /**
          * Returns StackEl without poping
          */
         get() {
-            return data[this.data.length - 1];
+            return this.data[this.data.length - 1];
         }
         
         isEmpty() {
-            return data.length === 0;
+            return this.data.length === 0;
         }
     }
     
@@ -75,17 +77,15 @@ define(['../model'], function(model) {
         /**
          * @param {DiagramSet}
          *            dSet - All project to navigate
-         * @param {Diagram}
-         *            dMain - The main diagram to start with
          * @param {Tape}
          *            tape
          */
-        constructor(dSet, dMain, tape) {
+        constructor(dSet, tape) {
             this.tape = tape;
             this.dSet = dSet;
-            this.dMain = dMain;
+            this.dMain = dSet.main;
             
-            let enterEls = getEnterElements();
+            let enterEls = this.dMain.getEnterElements();
             if (enterEls.length !== 1)
                 throw new Error("getEnterElements length " + enterEls.length);
             
